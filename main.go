@@ -25,7 +25,6 @@ func commandExit(args []string) error {
 
 func commandMap(args []string) error {
 	const pageSize = 20
-	// Use a static variable to keep track of the current offset between calls
 	if mapState.offset == -1 {
 		mapState.offset = 0
 	}
@@ -55,7 +54,6 @@ func commandMap(args []string) error {
 	return nil
 }
 
-// mapState keeps track of the current offset for the map command
 var mapState = struct{ offset int }{offset: -1}
 
 var pokedex = make(map[string]Pokemon)

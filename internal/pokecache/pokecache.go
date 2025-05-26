@@ -5,22 +5,20 @@ import (
 	"time"
 )
 
-// Package pokecache provides caching logic for the Pokedex application.
-
 // entry represents a cache value and the time it was added.
 type entry struct {
 	val     []byte
 	addedAt time.Time
 }
 
-// Cache is a thread-safe cache with expiration.
+// Cache is a the mutex we use to sync access to the cache.
 type Cache struct {
 	mu       sync.Mutex
 	entries  map[string]entry
 	interval time.Duration
 }
 
-// NewCache creates a new Cache and starts the reap loop.
+// NewCache creates a new Cache and starts the loop.
 func NewCache(interval time.Duration) *Cache {
 	c := &Cache{
 		entries:  make(map[string]entry),
@@ -30,7 +28,7 @@ func NewCache(interval time.Duration) *Cache {
 	return c
 }
 
-// Add adds a new entry to the cache.
+// Add() adds a new entry to the cache.
 func (c *Cache) Add(key string, val []byte) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -48,7 +46,7 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	return e.val, true
 }
 
-// reapLoop periodically removes entries older than the interval.
+// reapLoop removes entries older than the interval.
 func (c *Cache) reapLoop() {
 	for {
 		time.Sleep(c.interval)
